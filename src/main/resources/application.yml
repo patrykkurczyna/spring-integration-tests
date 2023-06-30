@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      base-path: /_
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  server:
+    port: 8081
