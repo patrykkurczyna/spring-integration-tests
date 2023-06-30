@@ -7,6 +7,8 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 val spockVersion: String by project
 val groovyVersion: String by project
 val jacksonVersion: String by project
+val testcontainersVersion: String by project
+val postgresqlVersion: String by project
 
 plugins {
     id("org.springframework.boot") version "3.1.1"
@@ -47,10 +49,11 @@ val itestImplementation: Configuration by configurations.getting {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-    implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.postgresql:postgresql:$postgresqlVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.spockframework:spock-core:$spockVersion")
     testImplementation("org.spockframework:spock-spring:$spockVersion")
@@ -59,6 +62,7 @@ dependencies {
     itestImplementation("org.spockframework:spock-core:$spockVersion")
     itestImplementation("org.spockframework:spock-spring:$spockVersion")
     itestImplementation("org.apache.groovy:groovy-all:$groovyVersion")
+    itestImplementation("org.testcontainers:postgresql:$testcontainersVersion")
 }
 
 tasks.withType<KotlinCompile> {
@@ -95,4 +99,5 @@ tasks.check {
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     outputToConsole.set(true)
+    disabledRules.set(setOf("filename"))
 }
