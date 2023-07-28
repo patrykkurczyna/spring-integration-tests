@@ -9,6 +9,7 @@ val groovyVersion: String by project
 val jacksonVersion: String by project
 val testcontainersVersion: String by project
 val postgresqlVersion: String by project
+val liquibaseVersion: String by project
 
 plugins {
     id("org.springframework.boot") version "3.1.1"
@@ -54,6 +55,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("org.postgresql:postgresql:$postgresqlVersion")
+    implementation("org.liquibase:liquibase-core:$liquibaseVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.spockframework:spock-core:$spockVersion")
     testImplementation("org.spockframework:spock-spring:$spockVersion")
