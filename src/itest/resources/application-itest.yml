@@ -2,3 +2,6 @@ spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:postgresql:15.3:///springit
+
+payment:
+  url: http://localhost:${wiremock.stripePort}

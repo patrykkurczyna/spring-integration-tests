@@ -10,6 +10,7 @@ val jacksonVersion: String by project
 val testcontainersVersion: String by project
 val postgresqlVersion: String by project
 val liquibaseVersion: String by project
+val wiremockVersion: String by project
 
 plugins {
     id("org.springframework.boot") version "3.1.1"
@@ -65,6 +66,7 @@ dependencies {
     itestImplementation("org.spockframework:spock-spring:$spockVersion")
     itestImplementation("org.apache.groovy:groovy-all:$groovyVersion")
     itestImplementation("org.testcontainers:postgresql:$testcontainersVersion")
+    itestImplementation("com.github.tomakehurst:wiremock-jre8-standalone:$wiremockVersion")
 }
 
 tasks.withType<KotlinCompile> {
