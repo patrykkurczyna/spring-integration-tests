@@ -8,10 +8,12 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.TestPropertySourceUtils
 import pl.kurczyna.springit.utils.DbTestClient
+import pl.kurczyna.springit.utils.KafkaMock
 import pl.kurczyna.springit.utils.StripeMock
 import spock.lang.Specification
 
@@ -32,6 +34,9 @@ abstract class IntegrationTestBase extends Specification {
     @Autowired
     private NamedParameterJdbcTemplate template
 
+    @Autowired
+    KafkaTemplate<String, UserEvent> kafkaUsersProducer
+
     DbTestClient dbTestClient
 
     private static WireMockServer stripeServer
@@ -41,6 +46,7 @@ abstract class IntegrationTestBase extends Specification {
     def setupSpec() {
         stripeServer = new WireMockServer(stripePort)
         stripeServer.start()
+        KafkaMock.start()
     }
 
     def setup() {
@@ -54,12 +60,13 @@ abstract class IntegrationTestBase extends Specification {
 
     def cleanupSpec() {
         stripeServer.stop()
+        KafkaMock.stop()
     }
 
     static class PropertyInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         void initialize(ConfigurableApplicationContext applicationContext) {
-            String[] properties = ["wiremock.stripePort=$stripePort"]
+            String[] properties = ["wiremock.stripePort=$stripePort", "kafka.bootstrapServers=${KafkaMock.bootstrapServers}"]
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
                     applicationContext,
                     properties

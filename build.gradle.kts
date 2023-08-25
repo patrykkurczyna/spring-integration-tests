@@ -11,6 +11,7 @@ val testcontainersVersion: String by project
 val postgresqlVersion: String by project
 val liquibaseVersion: String by project
 val wiremockVersion: String by project
+val springKafkaVersion: String by project
 
 plugins {
     id("org.springframework.boot") version "3.1.1"
@@ -57,6 +58,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("org.liquibase:liquibase-core:$liquibaseVersion")
+    implementation("org.springframework.kafka:spring-kafka:$springKafkaVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.spockframework:spock-core:$spockVersion")
     testImplementation("org.spockframework:spock-spring:$spockVersion")
@@ -66,6 +68,7 @@ dependencies {
     itestImplementation("org.spockframework:spock-spring:$spockVersion")
     itestImplementation("org.apache.groovy:groovy-all:$groovyVersion")
     itestImplementation("org.testcontainers:postgresql:$testcontainersVersion")
+    itestImplementation("org.testcontainers:kafka:$testcontainersVersion")
     itestImplementation("com.github.tomakehurst:wiremock-jre8-standalone:$wiremockVersion")
 }
 

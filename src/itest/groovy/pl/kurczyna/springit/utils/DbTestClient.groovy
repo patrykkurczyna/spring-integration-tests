@@ -1,10 +1,10 @@
 package pl.kurczyna.springit.utils
 
 import org.intellij.lang.annotations.Language
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.jdbc.core.namedparam.SqlParameterSource
 import pl.kurczyna.springit.User
 
 import java.sql.ResultSet
@@ -53,6 +53,10 @@ class DbTestClient {
     }
 
     User getUserById(Long id) {
-        return template.queryForObject(GET_USER_BY_ID, ['id' : id], USER_ROW_MAPPER) as User
+        try {
+            return template.queryForObject(GET_USER_BY_ID, ['id' : id], USER_ROW_MAPPER) as User
+        } catch (EmptyResultDataAccessException ignored) {
+            return null
+        }
     }
 }

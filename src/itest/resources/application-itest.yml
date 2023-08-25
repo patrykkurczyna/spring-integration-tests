@@ -2,6 +2,15 @@ spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:postgresql:15.3:///springit
+  kafka:
+    bootstrap-servers: ${kafka.bootstrapServers}
+    consumer:
+      group-id: spring-it-itest
+    producer:
+      retries: 1
+      acks: all
+      value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
 
 payment:
   url: http://localhost:${wiremock.stripePort}

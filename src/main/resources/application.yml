@@ -14,5 +14,20 @@ management:
       show-details: always
       show-components: always
 
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAPSERVERS}
+    consumer:
+      group-id: spring-it
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      value-deserializer: "org.springframework.kafka.support.serializer.JsonDeserializer"
+      properties:
+        spring.json.trusted.packages: "pl.kurczyna.springit"
+
 payment:
   url: https://example.com
+
+topics:
+  users: public.user.events
