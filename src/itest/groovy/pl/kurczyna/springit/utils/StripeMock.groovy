@@ -5,14 +5,10 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import pl.kurczyna.springit.thirdparty.Payment
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import static com.github.tomakehurst.wiremock.client.WireMock.containing
-import static com.github.tomakehurst.wiremock.client.WireMock.containing
-import static com.github.tomakehurst.wiremock.client.WireMock.containing
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import static com.github.tomakehurst.wiremock.client.WireMock.post
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import static org.springframework.http.HttpStatus.ACCEPTED
 
 class StripeMock {
