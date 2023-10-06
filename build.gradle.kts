@@ -14,14 +14,14 @@ val wiremockVersion: String by project
 val springKafkaVersion: String by project
 
 plugins {
-    id("org.springframework.boot") version "3.1.1"
-    id("io.spring.dependency-management") version "1.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "11.4.2"
-    id("com.adarshr.test-logger") version "3.2.0"
-    kotlin("jvm") version "1.8.22"
-    kotlin("plugin.spring") version "1.8.22"
-    idea
-    groovy
+    id("org.springframework.boot") version "3.1.1" // Spring Boot
+    id("io.spring.dependency-management") version "1.1.0" // Spring Dependency Management
+    id("org.jlleitschuh.gradle.ktlint") version "11.4.2" // Kotlin linter https://pinterest.github.io/ktlint/1.0.0/
+    id("com.adarshr.test-logger") version "3.2.0" // Plugin for printing beautiful logs on the console while running tests. https://github.com/radarsh/gradle-test-logger-plugin
+    kotlin("jvm") version "1.8.22" // Kotlin plugin
+    kotlin("plugin.spring") version "1.8.22" // Kotlin Sprign support
+    idea // Intelij Idea plugin
+    groovy // Groovy plugin (needed for Spock)
 }
 
 repositories {
