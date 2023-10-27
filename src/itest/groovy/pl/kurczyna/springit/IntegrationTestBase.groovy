@@ -60,7 +60,7 @@ abstract class IntegrationTestBase extends Specification {
 
     def cleanupSpec() {
         stripeServer.stop()
-        KafkaMock.stop()
+//        KafkaMock.stop()
     }
 
     static class PropertyInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {

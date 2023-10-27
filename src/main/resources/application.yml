@@ -25,9 +25,15 @@ spring:
       value-deserializer: "org.springframework.kafka.support.serializer.JsonDeserializer"
       properties:
         spring.json.trusted.packages: "pl.kurczyna.springit"
+    producer:
+      retries: 1
+      acks: all
+      value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
 
 payment:
   url: https://example.com
 
 topics:
   users: public.user.events
+  broadcast: public.user.broadcast

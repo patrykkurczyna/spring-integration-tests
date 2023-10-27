@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pl.kurczyna.springit.User
 import pl.kurczyna.springit.db.UserRepository
+import pl.kurczyna.springit.kafka.UserBroadcast
 
 @RestController
 @RequestMapping("/api/users")
-class UserController(private val repository: UserRepository) {
+class UserController(private val repository: UserRepository, private val userBroadcast: UserBroadcast) {
 
     @GetMapping
     fun getAllUsers(): ResponseEntity<List<User>> {
@@ -23,6 +24,7 @@ class UserController(private val repository: UserRepository) {
     @PostMapping
     fun addOrUpdate(@RequestBody user: User): ResponseEntity<Unit> {
         repository.addOrUpdate(user)
+        userBroadcast.broadcastUserRegistration(user)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 }

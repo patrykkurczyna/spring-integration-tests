@@ -17,7 +17,7 @@ class ApplicationConfig {
 
     @Bean
     fun restTemplate(restTemplateBuilder: RestTemplateBuilder): RestTemplate =
-            restTemplateBuilder
-                    .messageConverters(MappingJackson2HttpMessageConverter(jacksonObjectMapper()))
-                    .build()
+        restTemplateBuilder
+            .messageConverters(MappingJackson2HttpMessageConverter(jacksonObjectMapper()))
+            .build()
 }

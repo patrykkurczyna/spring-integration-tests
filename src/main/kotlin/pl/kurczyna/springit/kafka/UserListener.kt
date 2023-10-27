@@ -11,7 +11,7 @@ class UserListener(private val repository: UserRepository) {
 
     @KafkaListener(topics = ["\${topics.users}"])
     fun handleUserEvent(event: UserEvent) {
-        when(event.operation) {
+        when (event.operation) {
             Operation.REGISTER -> repository.addOrUpdate(event.toUser())
             Operation.DELETE -> repository.delete(event.id)
         }

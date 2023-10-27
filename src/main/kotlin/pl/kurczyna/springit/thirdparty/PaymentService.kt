@@ -18,9 +18,9 @@ interface PaymentService {
 
 @Service
 class StripePaymentService(
-        private val template: RestTemplate,
-        @Value("\${payment.url}") private val paymentServiceUrl: String
-): PaymentService {
+    private val template: RestTemplate,
+    @Value("\${payment.url}") private val paymentServiceUrl: String
+) : PaymentService {
     override fun makePayment(payment: Payment) {
         template.postForEntity("$paymentServiceUrl/api/pay", HttpEntity(payment), Unit::class.java)
     }

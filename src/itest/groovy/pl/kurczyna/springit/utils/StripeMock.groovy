@@ -10,6 +10,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import static org.springframework.http.HttpStatus.ACCEPTED
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 
 class StripeMock {
     WireMockServer server
@@ -26,6 +27,13 @@ class StripeMock {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withStatus(ACCEPTED.value())))
+    }
+
+    def payRespondWithFailure(Payment payment) {
+        server.stubFor(post(urlEqualTo("/api/pay"))
+                .withRequestBody(equalTo(mapper.writeValueAsString(payment)))
+                .willReturn(aResponse()
+                        .withStatus(INTERNAL_SERVER_ERROR.value())))
     }
 
     def verifyPayCalled(Payment payment, int times = 1) {
