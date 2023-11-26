@@ -14,6 +14,8 @@ val wiremockVersion: String by project
 val springKafkaVersion: String by project
 val springCloudGcpVersion: String by project
 val springCloudVersion: String by project
+val jakartaVersion: String by project
+val greenmailVersion: String by project
 
 plugins {
     id("org.springframework.boot") version "3.1.1" // Spring Boot
@@ -62,6 +64,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
@@ -69,6 +72,7 @@ dependencies {
     implementation("org.liquibase:liquibase-core:$liquibaseVersion")
     implementation("org.springframework.kafka:spring-kafka:$springKafkaVersion")
     implementation("com.google.cloud:spring-cloud-gcp-starter-storage")
+    implementation("com.sun.mail:jakarta.mail:$jakartaVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.spockframework:spock-core:$spockVersion")
     testImplementation("org.spockframework:spock-spring:$spockVersion")
@@ -81,6 +85,8 @@ dependencies {
     itestImplementation("org.testcontainers:kafka:$testcontainersVersion")
     itestImplementation("com.github.tomakehurst:wiremock-jre8-standalone:$wiremockVersion")
     itestImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
+    itestImplementation("com.icegreen:greenmail:$greenmailVersion")
+    itestImplementation("com.icegreen:greenmail-junit5:$greenmailVersion")
 }
 
 tasks.withType<KotlinCompile> {

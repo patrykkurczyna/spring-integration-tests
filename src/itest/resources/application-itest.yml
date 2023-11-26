@@ -6,6 +6,14 @@ spring:
     bootstrap-servers: ${kafka.bootstrapServers}
     consumer:
       group-id: spring-it-itest
+  mail:
+    host: localhost
+    port: ${greenmail.port}
+    username: ${greenmail.user}
+    password: ${greenmail.password}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 payment:
   url: http://localhost:${wiremock.stripePort}

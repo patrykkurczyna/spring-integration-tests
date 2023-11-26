@@ -1,6 +1,9 @@
 package pl.kurczyna.springit
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.icegreen.greenmail.configuration.GreenMailConfiguration
+import com.icegreen.greenmail.util.GreenMail
+import com.icegreen.greenmail.util.ServerSetupTest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -51,22 +54,34 @@ abstract class IntegrationTestBase extends Specification {
     StripeMock stripeMock
     static int stripePort = findAvailableTcpPort()
 
+    static int greenMailPort = findAvailableTcpPort()
+    static String greenMailUser = UUID.randomUUID().toString()
+    static String greenMailPassword = UUID.randomUUID().toString()
+    static GreenMail greenMail
+
     def setupSpec() {
         stripeServer = new WireMockServer(stripePort)
         stripeServer.start()
         KafkaMock.start()
         GcsMock.start()
+        greenMail = new GreenMail(ServerSetupTest.SMTP.port(greenMailPort))
+                .withConfiguration(
+                        GreenMailConfiguration.aConfig()
+                                .withUser(greenMailUser, greenMailPassword)
+                )
     }
 
     def setup() {
         dbTestClient = new DbTestClient(template)
         stripeMock = new StripeMock(stripeServer)
         storageClient.createBucket()
+        greenMail.start()
     }
 
     def cleanup() {
         stripeServer.resetAll()
         storageClient.deleteBucket()
+        greenMail.stop()
     }
 
     def cleanupSpec() {
@@ -81,7 +96,10 @@ abstract class IntegrationTestBase extends Specification {
             String[] properties = [
                     "wiremock.stripePort=$stripePort",
                     "kafka.bootstrapServers=${KafkaMock.bootstrapServers}",
-                    "gcs.port=${GcsMock.gcsPort}"
+                    "gcs.port=${GcsMock.gcsPort}",
+                    "greenmail.port=${greenMailPort}",
+                    "greenmail.user=${greenMailUser}",
+                    "greenmail.password=${greenMailPassword}"
             ]
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
                     applicationContext,

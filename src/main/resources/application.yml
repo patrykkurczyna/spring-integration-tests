@@ -30,6 +30,14 @@ spring:
       acks: all
       value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: <username>
+    password: <password>
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 payment:
   url: https://example.com
