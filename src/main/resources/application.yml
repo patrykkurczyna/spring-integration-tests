@@ -37,3 +37,6 @@ payment:
 topics:
   users: public.user.events
   broadcast: public.user.broadcast
+
+gcs:
+  bucket: gcs://pictures

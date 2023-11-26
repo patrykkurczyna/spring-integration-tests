@@ -12,6 +12,8 @@ val postgresqlVersion: String by project
 val liquibaseVersion: String by project
 val wiremockVersion: String by project
 val springKafkaVersion: String by project
+val springCloudGcpVersion: String by project
+val springCloudVersion: String by project
 
 plugins {
     id("org.springframework.boot") version "3.1.1" // Spring Boot
@@ -49,6 +51,13 @@ val itestImplementation: Configuration by configurations.getting {
     extendsFrom(configurations.implementation.get())
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("com.google.cloud:spring-cloud-gcp-dependencies:$springCloudGcpVersion")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -59,6 +68,7 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("org.liquibase:liquibase-core:$liquibaseVersion")
     implementation("org.springframework.kafka:spring-kafka:$springKafkaVersion")
+    implementation("com.google.cloud:spring-cloud-gcp-starter-storage")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.spockframework:spock-core:$spockVersion")
     testImplementation("org.spockframework:spock-spring:$spockVersion")
@@ -70,6 +80,7 @@ dependencies {
     itestImplementation("org.testcontainers:postgresql:$testcontainersVersion")
     itestImplementation("org.testcontainers:kafka:$testcontainersVersion")
     itestImplementation("com.github.tomakehurst:wiremock-jre8-standalone:$wiremockVersion")
+    itestImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
 }
 
 tasks.withType<KotlinCompile> {

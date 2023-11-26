@@ -9,3 +9,6 @@ spring:
 
 payment:
   url: http://localhost:${wiremock.stripePort}
+
+gcs:
+  bucket: itest-pictures
