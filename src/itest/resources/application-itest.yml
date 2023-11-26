@@ -20,3 +20,6 @@ payment:
 
 gcs:
   bucket: itest-pictures
+
+sqs:
+  queue-name: itest-email-events-queue

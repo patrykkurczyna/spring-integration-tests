@@ -16,6 +16,8 @@ val springCloudGcpVersion: String by project
 val springCloudVersion: String by project
 val jakartaVersion: String by project
 val greenmailVersion: String by project
+val awsCloudVersion: String by project
+val localstackVersion: String by project
 
 plugins {
     id("org.springframework.boot") version "3.1.1" // Spring Boot
@@ -65,6 +67,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:$awsCloudVersion"))
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
@@ -87,6 +91,7 @@ dependencies {
     itestImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
     itestImplementation("com.icegreen:greenmail:$greenmailVersion")
     itestImplementation("com.icegreen:greenmail-junit5:$greenmailVersion")
+    itestImplementation("org.testcontainers:localstack:$localstackVersion")
 }
 
 tasks.withType<KotlinCompile> {

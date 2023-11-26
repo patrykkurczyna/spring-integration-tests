@@ -48,3 +48,6 @@ topics:
 
 gcs:
   bucket: gcs://pictures
+
+sqs:
+  queue-name: email-events-queue

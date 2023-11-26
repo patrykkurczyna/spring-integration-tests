@@ -6,26 +6,37 @@ import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetupTest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
+import org.springframework.context.annotation.Primary
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.TestPropertySourceUtils
+import org.testcontainers.containers.localstack.LocalStackContainer
+import org.testcontainers.utility.DockerImageName
 import pl.kurczyna.springit.configuration.GcsITestConfiguration
 import pl.kurczyna.springit.utils.DbTestClient
 import pl.kurczyna.springit.utils.GcsMock
 import pl.kurczyna.springit.utils.KafkaMock
+import pl.kurczyna.springit.utils.SqsTestClient
 import pl.kurczyna.springit.utils.StorageTestClient
 import pl.kurczyna.springit.utils.StripeMock
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import spock.lang.Specification
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import static org.springframework.test.util.TestSocketUtils.findAvailableTcpPort
+import static org.testcontainers.containers.localstack.LocalStackContainer.Service.SQS
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles('itest')
@@ -48,6 +59,9 @@ abstract class IntegrationTestBase extends Specification {
     @Autowired
     StorageTestClient storageClient
 
+    @Autowired
+    SqsTestClient sqsTestClient
+
     DbTestClient dbTestClient
 
     private static WireMockServer stripeServer
@@ -59,6 +73,9 @@ abstract class IntegrationTestBase extends Specification {
     static String greenMailPassword = UUID.randomUUID().toString()
     static GreenMail greenMail
 
+    private static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack")
+    public static LocalStackContainer localstack = new LocalStackContainer(localstackImage).withServices(SQS)
+
     def setupSpec() {
         stripeServer = new WireMockServer(stripePort)
         stripeServer.start()
@@ -69,6 +86,7 @@ abstract class IntegrationTestBase extends Specification {
                         GreenMailConfiguration.aConfig()
                                 .withUser(greenMailUser, greenMailPassword)
                 )
+        localstack.start()
     }
 
     def setup() {
@@ -76,6 +94,7 @@ abstract class IntegrationTestBase extends Specification {
         stripeMock = new StripeMock(stripeServer)
         storageClient.createBucket()
         greenMail.start()
+        sqsTestClient.createQueue()
     }
 
     def cleanup() {
@@ -88,6 +107,7 @@ abstract class IntegrationTestBase extends Specification {
         stripeServer.stop()
 //        KafkaMock.stop()
 //        GcsMock.stop()
+        localstack.stop()
     }
 
     static class PropertyInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -105,6 +125,20 @@ abstract class IntegrationTestBase extends Specification {
                     applicationContext,
                     properties
             )
+        }
+    }
+
+    @TestConfiguration
+    static class AwsITestConfiguration {
+
+        @Bean
+        @Primary
+        SqsAsyncClient amazonSQSAsync() {
+            return SqsAsyncClient.builder()
+                    .region(Region.of(localstack.getRegion()))
+                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(localstack.accessKey, localstack.secretKey)))
+                    .endpointOverride(localstack.getEndpointOverride(SQS))
+                    .build()
         }
     }
 }
