@@ -1,5 +1,6 @@
-package pl.kurczyna.springit.utils
+package pl.kurczyna.springit.extensions.mocks
 
+import pl.kurczyna.springit.extensions.Mock
 
 import java.util.concurrent.ConcurrentHashMap
 
@@ -8,7 +9,7 @@ import org.slf4j.LoggerFactory
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
 
-class KafkaMock {
+class KafkaMock implements Mock {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaMock.class)
     private static final String CONFLUENT_PLATFORM_VERSION = '7.4.0'
@@ -22,16 +23,25 @@ class KafkaMock {
 
     static ConcurrentHashMap<String, List<Object>> messages = new ConcurrentHashMap<>()
 
-    static void start() {
+    @Override
+    void start() {
         log.info("Starting Kafka Container Mock")
         container = new KafkaContainer(KAFKA_IMAGE)
         container.start()
         bootstrapServers = container.getBootstrapServers()
     }
 
-    static void stop() {
+    @Override
+    void stop() {
         log.info("Stopping Kafka Mock")
         container.stop()
+    }
+
+    @Override
+    String[] propertiesToRegister() {
+        return [
+                "kafka.bootstrapServers=$bootstrapServers"
+        ]
     }
 
     static void recordMessage(String topic, Object message) {

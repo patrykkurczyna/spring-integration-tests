@@ -3,6 +3,7 @@ package pl.kurczyna.springit
 import com.icegreen.greenmail.util.GreenMailUtil
 import jakarta.mail.internet.MimeMessage
 import org.springframework.beans.factory.annotation.Autowired
+import pl.kurczyna.springit.extensions.mocks.MailMock
 import pl.kurczyna.springit.thirdparty.Email
 import pl.kurczyna.springit.thirdparty.EmailService
 
@@ -18,7 +19,7 @@ class ITestEmailService extends IntegrationTestBase {
         emailService.sendEmail(email)
 
         then: 'Greenmail receives one email message'
-        def messages = greenMail.getReceivedMessages()
+        def messages = MailMock.getReceivedMessages()
         messages.size() == 1
         with(messages.first()) {
             getHeader(it, 'From') == email.sender

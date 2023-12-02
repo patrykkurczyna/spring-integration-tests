@@ -1,21 +1,23 @@
-package pl.kurczyna.springit.utils
+package pl.kurczyna.springit.extensions.mocks
 
 import net.minidev.json.JSONObject
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.testcontainers.containers.GenericContainer
+import pl.kurczyna.springit.extensions.Mock
 
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-class GcsMock {
+class GcsMock implements Mock {
 
     private static def container
     static def gcsPort
 
-    static void start() {
+    @Override
+    void start() {
         container = new GenericContainer<>("fsouza/fake-gcs-server:latest")
                 .withExposedPorts(4443)
                 .withCreateContainerCmdModifier {
@@ -28,11 +30,13 @@ class GcsMock {
         updateExternalUrlWithContainerUrl(container.getHost(), gcsPort)
     }
 
-    static void stop() {
+    @Override
+    void stop() {
         container.stop()
     }
 
-    static String[] propertiesToRegister() {
+    @Override
+    String[] propertiesToRegister() {
         return ["gcs.port=$gcsPort"]
     }
 

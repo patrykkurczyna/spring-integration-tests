@@ -10,6 +10,14 @@ import static org.springframework.http.HttpStatus.OK
 
 class ITestPictures extends IntegrationTestBase {
 
+    def setup() {
+        storageClient.createBucket()
+    }
+
+    def cleanup() {
+        storageClient.deleteBucket()
+    }
+
     def "should upload picture to GCS"() {
         given: 'There is a picture to be uploaded'
         def picture = new ClassPathResource("pictures/yosemite.png")

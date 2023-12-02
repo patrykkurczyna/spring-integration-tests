@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import pl.kurczyna.springit.extensions.mocks.KafkaMock
 
 @Component
 @Profile('itest')

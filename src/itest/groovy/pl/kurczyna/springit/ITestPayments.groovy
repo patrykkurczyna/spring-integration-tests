@@ -2,6 +2,7 @@ package pl.kurczyna.springit
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.client.HttpServerErrorException
+import pl.kurczyna.springit.extensions.mocks.StripeMock
 import pl.kurczyna.springit.thirdparty.Payment
 import pl.kurczyna.springit.thirdparty.PaymentService
 
@@ -15,7 +16,7 @@ class ITestPayments extends IntegrationTestBase {
         Payment payment = new Payment(100, Currency.getInstance('PLN'), "VISA")
 
         and: 'Stripe responds with success on new payment call'
-        stripeMock.payRespondWithSuccess(payment)
+        StripeMock.payRespondWithSuccess(payment)
 
         when: 'We make a payment'
         paymentService.makePayment(payment)
@@ -24,7 +25,7 @@ class ITestPayments extends IntegrationTestBase {
         noExceptionThrown()
 
         and: 'Stripe pay endpoint was called once with specific data'
-        stripeMock.verifyPayCalled(payment, 1)
+        StripeMock.verifyPayCalled(payment, 1)
     }
 
     def "should throw exception when Stripe API call fails"() {
@@ -32,7 +33,7 @@ class ITestPayments extends IntegrationTestBase {
         Payment payment = new Payment(100, Currency.getInstance('PLN'), "VISA")
 
         and: 'Stripe responds with failure'
-        stripeMock.payRespondWithFailure(payment)
+        StripeMock.payRespondWithFailure(payment)
 
         when: 'We make a payment'
         paymentService.makePayment(payment)
@@ -41,6 +42,6 @@ class ITestPayments extends IntegrationTestBase {
         thrown(HttpServerErrorException.InternalServerError)
 
         and: 'Stripe pay endpoint was called once with specific data'
-        stripeMock.verifyPayCalled(payment, 1)
+        StripeMock.verifyPayCalled(payment, 1)
     }
 }

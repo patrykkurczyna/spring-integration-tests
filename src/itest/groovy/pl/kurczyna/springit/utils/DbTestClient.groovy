@@ -1,10 +1,12 @@
 package pl.kurczyna.springit.utils
 
 import org.intellij.lang.annotations.Language
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Component
 import pl.kurczyna.springit.User
 
 import java.sql.ResultSet
@@ -12,7 +14,11 @@ import java.sql.SQLException
 
 import static org.testcontainers.shaded.org.apache.commons.lang3.RandomUtils.nextLong
 
+@Component
 class DbTestClient {
+
+    @Autowired
+    NamedParameterJdbcTemplate template
 
     @Language("PostgreSQL")
     private static final String INSERT_USER = """
@@ -35,12 +41,6 @@ class DbTestClient {
                     rs.getString("name")
             )
         }
-    }
-
-    NamedParameterJdbcTemplate template
-
-    DbTestClient(NamedParameterJdbcTemplate template) {
-        this.template = template
     }
 
     void insertUser(Map args = [:]) {
